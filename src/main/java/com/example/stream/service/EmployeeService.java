@@ -4,49 +4,105 @@ import org.springframework.stereotype.Service;
 import com.example.stream.domain.Employee;
 import com.example.stream.exceptions.EmployeeAlreadyAddedException;
 import com.example.stream.exceptions.EmployeeNotFoundException;
-import com.example.stream.exceptions.EmployeeStorageIsFullException;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 @Service
 public class EmployeeService {
-    List<Employee> employees = new ArrayList<>();
+    private final Map<String, Employee> employees;
 
-    public Employee add(String firstName, String lastName) {
-       Employee employee = new Employee(firstName, lastName);
-        final int maxSize = 2;
-        if (employees.size() >= maxSize) {
-            throw new EmployeeStorageIsFullException();
-        }
-        if (employees.contains(employee)) {
+    public EmployeeService() {
+        this.employees = new HashMap<>();
+    }
+
+
+    public Employee add(String employeeName, String employeeSureName, int employeeSalary, int employeeDepartment) {
+        Employee employee = new Employee(employeeName, employeeSureName, employeeSalary, employeeDepartment);
+        if (employees.containsKey(employee.getFullName())) {
             throw new EmployeeAlreadyAddedException();
         }
-        employees.add(employee);
+        employees.put(employee.getFullName(), employee);
         return employee;
     }
 
-    public Employee remove(String firstName, String lastName) {
-        Employee employee = new Employee(firstName, lastName);
-        if (!employees.contains(employee)) {
+    public Employee remove(String employeeName, String employeeSureName, int employeeSalary, int employeeDepartment) {
+        Employee employee = new Employee(employeeName, employeeSureName, employeeSalary, employeeDepartment);
+        if (!employees.containsKey(employee.getFullName())) {
             throw new EmployeeNotFoundException();
         }
-        employees.remove(employee);
-        return employee;
+        return employees.remove(employee.getFullName());
+
     }
 
-    public Employee find(String firstName, String lastName) {
-        Employee employee = new Employee(firstName, lastName);
-        if (!employees.contains(employee)) {
+    public Employee find(String employeeName, String employeeSureName, int employeeSalary, int employeeDepartment) {
+        Employee employee = new Employee(employeeName, employeeSureName, employeeSalary, employeeDepartment);
+        if (!employees.containsKey(employee.getFullName())) {
             throw new EmployeeNotFoundException();
         }
-        return employee;
+        return employees.get(employee.getFullName());
     }
 
-    public List<Employee> showAll() {
-        return Collections.unmodifiableList(employees);
+    public Employee changeEmployeeSalary(String employeeName, String employeeSureName, int newSalary) {
+        final String fullName = employeeName + " " + employeeSureName;
+        if (!employees.containsKey(fullName)) {
+            throw new EmployeeNotFoundException();
+        }
+        employees.get(fullName).setSalary(newSalary);
+
+        return employees.get(fullName);
+    }
+
+    public Employee changeEmployeeDepart(String employeeName, String employeeSureName, int newDepart) {
+        final String fullName = employeeName + " " + employeeSureName;
+        if (!employees.containsKey(fullName)) {
+            throw new EmployeeNotFoundException();
+        }
+        employees.get(fullName).setDepartment(newDepart);
+
+        return employees.get(fullName);
+    }
+
+     public List<Employee> employeesByDepartment(int numberDepartment) {
+        List<Employee> employeeList = new ArrayList<>();
+        for (Employee employee : employees.values()) {
+            if (employee.getDepartment() == numberDepartment) {
+                employeeList.add(employee);
+            }
+        }
+        return employeeList;
     }
 
 
+
+
+     public double getAllSalary() {
+        int allSalary = 0;
+        for (Employee employee : employees.values()) {
+            allSalary += employee.getSalary();
+        }
+        return allSalary;
+    }
+
+   /* public Employee getEmployeeMinSalary() {
+        List<Employee> employeeList = new ArrayList<>(employees.values());
+        Collections.sort(employeeList);
+        return employeeList.get(0);
+    }
+
+    public Employee getEmployeeMaxSalary() {
+        List<Employee> employeeList = new ArrayList<>(employees.values());
+        Collections.sort(employeeList);
+        return employeeList.get(employeeList.size() - 1);
+    }
+
+
+    public double getAverageSalary() {
+        double average = getAllSalary() / employees.size();
+        return Math.round(average * 100) / 100.0d;
+    }*/
+
+
+    public Collection<Employee> showAll() {
+        return Collections.unmodifiableCollection(employees.values());
+    }
 }
