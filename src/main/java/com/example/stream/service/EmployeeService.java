@@ -15,6 +15,9 @@ public class EmployeeService {
         this.employees = new HashMap<>();
     }
 
+    public Map<String, Employee> getEmployees() {
+        return Collections.unmodifiableMap(employees);
+    }
 
     public Employee add(String employeeName, String employeeSureName, int employeeSalary, int employeeDepartment) {
         Employee employee = new Employee(employeeName, employeeSureName, employeeSalary, employeeDepartment);
@@ -62,7 +65,7 @@ public class EmployeeService {
         return employees.get(fullName);
     }
 
-     public List<Employee> employeesByDepartment(int numberDepartment) {
+    public List<Employee> employeesByDepartment(int numberDepartment) {
         List<Employee> employeeList = new ArrayList<>();
         for (Employee employee : employees.values()) {
             if (employee.getDepartment() == numberDepartment) {
@@ -73,9 +76,7 @@ public class EmployeeService {
     }
 
 
-
-
-     public double getAllSalary() {
+    public double getAllSalary() {
         int allSalary = 0;
         for (Employee employee : employees.values()) {
             allSalary += employee.getSalary();
@@ -83,23 +84,23 @@ public class EmployeeService {
         return allSalary;
     }
 
-   /* public Employee getEmployeeMinSalary() {
+    public Employee getEmployeeMinSalary() {
         List<Employee> employeeList = new ArrayList<>(employees.values());
-        Collections.sort(employeeList);
-        return employeeList.get(0);
+        return Collections.min(employeeList);
+
     }
 
     public Employee getEmployeeMaxSalary() {
         List<Employee> employeeList = new ArrayList<>(employees.values());
-        Collections.sort(employeeList);
-        return employeeList.get(employeeList.size() - 1);
+        return Collections.max(employeeList);
+
     }
 
 
     public double getAverageSalary() {
         double average = getAllSalary() / employees.size();
         return Math.round(average * 100) / 100.0d;
-    }*/
+    }
 
 
     public Collection<Employee> showAll() {

@@ -1,6 +1,6 @@
 package com.example.stream.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -73,6 +73,21 @@ public class EmployeeController {
     @GetMapping("/allSalary")
     public String allSalary() {
         return "зарплата всех сотрудников : " + employeeService.getAllSalary();
+    }
+
+    @GetMapping("/minSalary")
+    public Employee min() {
+        return employeeService.getEmployeeMinSalary();
+    }
+
+    @GetMapping("/maxSalary")
+    public Employee max() {
+        return employeeService.getEmployeeMaxSalary();
+    }
+
+    @GetMapping("/average")
+    public String averageSalary() {
+        return "средняя зарплата сотрудников : " + employeeService.getAverageSalary();
     }
 
 }

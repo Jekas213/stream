@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.Objects;
 
-public class Employee {
+public class Employee implements Comparable<Employee> {
     @JsonProperty("first")
     private String firstName;
     @JsonProperty("last")
@@ -42,7 +42,10 @@ public class Employee {
     public String getLastName() {
         return lastName;
     }
-    public String getFullName() {return firstName + " " + lastName;}
+
+    public String getFullName() {
+        return firstName + " " + lastName;
+    }
 
     @Override
     public boolean equals(Object o) {
@@ -65,5 +68,10 @@ public class Employee {
                 ", salary=" + salary +
                 ", department=" + department +
                 '}';
+    }
+
+    @Override
+    public int compareTo(Employee e) {
+        return this.salary - e.getSalary();
     }
 }
