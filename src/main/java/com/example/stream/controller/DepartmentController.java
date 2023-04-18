@@ -36,7 +36,7 @@ public class DepartmentController {
     }
 
     @GetMapping("/all")
-    public Set<Map.Entry<Integer, List<Employee>>> allEmployeeByDepartment() {
+    public Map<Integer, List<Employee>> allEmployeeByDepartment() {
         return departmentsService.employeesByDepartments();
     }
 }

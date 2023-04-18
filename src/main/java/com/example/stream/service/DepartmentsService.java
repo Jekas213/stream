@@ -19,26 +19,26 @@ public class DepartmentsService {
         return employeeService.getEmployees().values().stream()
                 .filter(e -> e.getDepartment() == dep)
                 .min(Comparator.comparingInt(Employee::getSalary))
-                .orElseThrow();
+                .orElse(null);
     }
 
     public Employee getMaxSalaryByDep(int dep) {
         return employeeService.getEmployees().values().stream()
                 .filter(e -> e.getDepartment() == dep)
                 .max(Comparator.comparingInt(Employee::getSalary))
-                .orElseThrow();
+                .orElse(null);
     }
 
     public List<Employee> employeesByDepartment(int dep) {
         return employeeService.getEmployees().values().stream()
                 .filter(e -> e.getDepartment() == dep)
-                .collect(Collectors.toList());
+                .toList();
     }
 
-    public Set<Map.Entry<Integer, List<Employee>>> employeesByDepartments (){
+    public Map<Integer, List<Employee>> employeesByDepartments (){
         return employeeService.getEmployees().values().stream()
-                .collect(Collectors.groupingBy(Employee::getDepartment))
-                .entrySet();
+                .collect(Collectors.groupingBy(Employee::getDepartment));
+
 
     }
 
