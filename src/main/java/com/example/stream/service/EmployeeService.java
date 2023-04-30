@@ -1,11 +1,15 @@
 package com.example.stream.service;
 
+import com.example.stream.exceptions.InvalidInputException;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import com.example.stream.domain.Employee;
 import com.example.stream.exceptions.EmployeeAlreadyAddedException;
 import com.example.stream.exceptions.EmployeeNotFoundException;
 
 import java.util.*;
+
+import static org.apache.commons.lang3.StringUtils.*;
 
 @Service
 public class EmployeeService {
@@ -20,6 +24,7 @@ public class EmployeeService {
     }
 
     public Employee add(String employeeName, String employeeSureName, int employeeSalary, int employeeDepartment) {
+        validate(employeeName,employeeSureName);
         Employee employee = new Employee(employeeName, employeeSureName, employeeSalary, employeeDepartment);
         if (employees.containsKey(employee.getFullName())) {
             throw new EmployeeAlreadyAddedException();
@@ -29,6 +34,7 @@ public class EmployeeService {
     }
 
     public Employee remove(String employeeName, String employeeSureName, int employeeSalary, int employeeDepartment) {
+        validate(employeeName,employeeSureName);
         Employee employee = new Employee(employeeName, employeeSureName, employeeSalary, employeeDepartment);
         if (!employees.containsKey(employee.getFullName())) {
             throw new EmployeeNotFoundException();
@@ -38,6 +44,7 @@ public class EmployeeService {
     }
 
     public Employee find(String employeeName, String employeeSureName, int employeeSalary, int employeeDepartment) {
+        validate(employeeName,employeeSureName);
         Employee employee = new Employee(employeeName, employeeSureName, employeeSalary, employeeDepartment);
         if (!employees.containsKey(employee.getFullName())) {
             throw new EmployeeNotFoundException();
@@ -46,6 +53,7 @@ public class EmployeeService {
     }
 
     public Employee changeEmployeeSalary(String employeeName, String employeeSureName, int newSalary) {
+        validate(employeeName,employeeSureName);
         final String fullName = employeeName + " " + employeeSureName;
         if (!employees.containsKey(fullName)) {
             throw new EmployeeNotFoundException();
@@ -56,6 +64,7 @@ public class EmployeeService {
     }
 
     public Employee changeEmployeeDepart(String employeeName, String employeeSureName, int newDepart) {
+        validate(employeeName,employeeSureName);
         final String fullName = employeeName + " " + employeeSureName;
         if (!employees.containsKey(fullName)) {
             throw new EmployeeNotFoundException();
@@ -105,5 +114,11 @@ public class EmployeeService {
 
     public Collection<Employee> showAll() {
         return Collections.unmodifiableCollection(employees.values());
+    }
+
+    private void validate (String name, String sureName) {
+        if (!(isAlpha(name) && isAlpha(sureName))) {
+            throw new InvalidInputException();
+        }
     }
 }
