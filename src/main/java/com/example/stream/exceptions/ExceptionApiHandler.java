@@ -25,5 +25,11 @@ public class ExceptionApiHandler {
         return exception.getMessage();
     }
 
+    @ResponseStatus(value = HttpStatus.BAD_REQUEST, reason = "Недопустимые символы")
+    @ExceptionHandler(InvalidInputException.class)
+    public String handelExceptionAdd(InvalidInputException exception) {
+        return exception.getMessage();
+    }
+
 
 }
